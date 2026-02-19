@@ -1,7 +1,3 @@
-provider "aws" {
-  region = var.region
-}
-
 terraform {
   required_providers {
     aws = {
@@ -9,4 +5,11 @@ terraform {
       version = ">= 5.0"
     }
   }
+
+  required_version = ">= 1.3"
 }
+
+provider "aws" {
+  region = var.region
+}
+
