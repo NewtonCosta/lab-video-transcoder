@@ -1,4 +1,4 @@
-data "aws_mediaconvert_endpoints" "this" {}
+
 
 provider "aws" {
   alias  = "mediaconvert"
