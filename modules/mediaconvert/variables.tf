@@ -4,6 +4,6 @@ variable "region" {
   default = "eu-west-1"
 }
 
-variable "mediaconvert_endpoint" {
-  type = string
-}
+# variable "mediaconvert_endpoint" {
+#   type = string
+# }
