@@ -5,7 +5,7 @@ provider "aws" {
   region = var.region
 
   endpoints {
-    mediaconvert = data.aws_mediaconvert_endpoints.this.endpoints[0].url
+    mediaconvert = var.mediaconvert_endpoint
   }
 }
 

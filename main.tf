@@ -9,9 +9,10 @@ module "sqs" {
 }
 
 module "mediaconvert" {
-  source       = "./modules/mediaconvert"
-  project_name = var.project_name
-  bucket_name  = module.s3.bucket_name
+  source                = "./modules/mediaconvert"
+  project_name          = var.project_name
+  bucket_name           = module.s3.bucket_name
+  mediaconvert_endpoint = var.mediaconvert_endpoint
 }
 
 module "lambda" {
