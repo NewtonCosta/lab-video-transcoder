@@ -11,9 +11,11 @@ variable "queue_url" {
 }
 
 variable "role_arn" {
-  type = string
+  type        = string
+  description = "MediaConvert IAM role ARN for jobs"
 }
 
 variable "job_template_name" {
-  type = string
+  type        = string
+  description = "Name of the MediaConvert stub JobTemplate"
 }
