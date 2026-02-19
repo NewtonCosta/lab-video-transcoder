@@ -2,10 +2,10 @@ resource "aws_iam_role" "mediaconvert_role" {
   name = "${var.project_name}-mediaconvert-role"
 
   assume_role_policy = jsonencode({
-    Version = "2012-10-17"
+    Version = "2012-10-17",
     Statement = [{
-      Effect    = "Allow"
-      Principal = { Service = "mediaconvert.amazonaws.com" }
+      Effect    = "Allow",
+      Principal = { Service = "mediaconvert.amazonaws.com" },
       Action    = "sts:AssumeRole"
     }]
   })
@@ -15,45 +15,26 @@ resource "aws_iam_role_policy" "mediaconvert_policy" {
   role = aws_iam_role.mediaconvert_role.id
 
   policy = jsonencode({
-    Version = "2012-10-17"
+    Version = "2012-10-17",
     Statement = [{
-      Effect   = "Allow"
-      Action   = ["s3:GetObject", "s3:PutObject", "s3:ListBucket"]
+      Effect   = "Allow",
+      Action   = ["s3:GetObject", "s3:PutObject", "s3:ListBucket"],
       Resource = ["arn:aws:s3:::${var.bucket_name}", "arn:aws:s3:::${var.bucket_name}/*"]
     }]
   })
 }
 
-# AWSCC MediaConvert Job Template
-resource "awscc_mediaconvert_job_template" "template" {
-  name        = "${var.project_name}-template"
-  description = "Auto-generated job template via awscc provider"
+resource "aws_cloudformation_stack" "mediaconvert_job_template" {
+  name          = "${var.project_name}-mediaconvert-template"
+  template_body = file("${path.module}/mediaconvert-job-template.yaml")
 
-  role_arn = aws_iam_role.mediaconvert_role.arn
+  parameters = {
+    BucketName       = var.bucket_name
+    ProjectName      = var.project_name
+    MediaConvertRole = aws_iam_role.mediaconvert_role.arn
+  }
 
-  settings = jsonencode({
-    OutputGroups = [{
-      Name = "File Group"
-      OutputGroupSettings = {
-        Type = "FILE_GROUP_SETTINGS"
-        FileGroupSettings = {
-          Destination = "s3://${var.bucket_name}/output/"
-        }
-      }
-      Outputs = [{
-        ContainerSettings = { Container = "MP4" }
-        VideoDescription = {
-          CodecSettings = {
-            Codec = "H_264"
-            H264Settings = {
-              RateControlMode = "QVBR"
-              MaxBitrate      = 5000000
-            }
-          }
-        }
-      }]
-    }]
-  })
+  capabilities = ["CAPABILITY_NAMED_IAM"]
 }
 
 output "role_arn" {
@@ -61,5 +42,5 @@ output "role_arn" {
 }
 
 output "job_template_name" {
-  value = awscc_mediaconvert_job_template.template.name
+  value = aws_cloudformation_stack.mediaconvert_job_template.outputs["MediaConvertJobTemplate"]
 }
