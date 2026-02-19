@@ -1,5 +1,5 @@
 resource "aws_s3_bucket" "this" {
-  bucket = "${var.project_name}-bucket"
+  bucket = "${var.project_name}-bucket-12345"
 }
 
 resource "aws_s3_bucket_versioning" "this" {
