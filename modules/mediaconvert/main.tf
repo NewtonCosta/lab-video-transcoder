@@ -1,3 +1,4 @@
+# IAM Role for MediaConvert
 resource "aws_iam_role" "mediaconvert_role" {
   name = "${var.project_name}-mediaconvert-role"
 
@@ -19,17 +20,17 @@ resource "aws_iam_role_policy" "mediaconvert_policy" {
     Statement = [{
       Effect   = "Allow",
       Action   = ["s3:GetObject", "s3:PutObject", "s3:ListBucket"],
-      Resource = ["arn:aws:s3:::${var.bucket_name}", "arn:aws:s3:::${var.bucket_name}/*"]
+      Resource = ["arn:aws:s3:::${var.project_name}-bucket", "arn:aws:s3:::${var.project_name}-bucket/*"]
     }]
   })
 }
 
+# CloudFormation Stack for MediaConvert JobTemplate
 resource "aws_cloudformation_stack" "mediaconvert_job_template" {
   name          = "${var.project_name}-mediaconvert-template"
   template_body = file("${path.module}/mediaconvert-job-template.yaml")
 
   parameters = {
-    BucketName       = var.bucket_name
     ProjectName      = var.project_name
     MediaConvertRole = aws_iam_role.mediaconvert_role.arn
   }

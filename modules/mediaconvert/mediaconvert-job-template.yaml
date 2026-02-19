@@ -1,34 +1,17 @@
 AWSTemplateFormatVersion: "2010-09-09"
-Description: MediaConvert Job Template
+Description: MediaConvert JobTemplate stub
+
+Parameters:
+  ProjectName:
+    Type: String
+  MediaConvertRole:
+    Type: String
 
 Resources:
   MediaConvertJobTemplate:
     Type: AWS::MediaConvert::JobTemplate
     Properties:
       Name: !Sub "${ProjectName}-template"
-      Description: "Terraform deployed MediaConvert Job Template"
-      Role: !Ref MediaConvertRole
-      Settings:
-        OutputGroups:
-          - Name: "File Group"
-            OutputGroupSettings:
-              Type: FILE_GROUP_SETTINGS
-              FileGroupSettings:
-                Destination: !Sub "s3://${BucketName}/output/"
-            Outputs:
-              - ContainerSettings:
-                  Container: "MP4"
-                VideoDescription:
-                  CodecSettings:
-                    Codec: H_264
-                    H264Settings:
-                      RateControlMode: QVBR
-                      MaxBitrate: 5000000
-
-Parameters:
-  BucketName:
-    Type: String
-  ProjectName:
-    Type: String
-  MediaConvertRole:
-    Type: String
+      Description: "Stub template via CFN"
+      StatusUpdateInterval: SECONDS_60
+      Category: "video-transcoder"
